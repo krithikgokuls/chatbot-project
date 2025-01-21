@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Chatbot</title>
+  <style>
+    .chatbot {
+      width: 400px;
+      margin: 50px auto;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-window {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      margin: 5px 0;
+      padding: 10px;
+      border-radius: 5px;
+      max-width: 80%;
+    }
+
+    .message.user {
+      background-color: #d1e7dd;
+      align-self: flex-end;
+    }
+
+    .message.bot {
+      background-color: #f8d7da;
+      align-self: flex-start;
+    }
+
+    .input-area {
+      display: flex;
+      border-top: 1px solid #ccc;
+    }
+
+    input[type='text'] {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-right: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone/babel.min.js"></script>
+  <script type="text/babel">
+    function App() {
+      const [messages, setMessages] = React.useState([]);
+      const [input, setInput] = React.useState('');
+
+      const handleSend = () => {
+        if (input.trim()) {
+          setMessages([...messages, { text: input, sender: 'user' }]);
+          setInput('');
+          setTimeout(() => {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { text: 'This is a response from the bot!', sender: 'bot' },
+            ]);
+          }, 1000);
+        }
+      };
+
+      return (
+        <div className="chatbot">
+          <div className="chat-window">
+            {messages.map((msg, index) => (
+              <div key={index} className={`message ${msg.sender}`}>
+                {msg.text}
+              </div>
+            ))}
+          </div>
+          <div className="input-area">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            />
+            <button onClick={handleSend}>Send</button>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
